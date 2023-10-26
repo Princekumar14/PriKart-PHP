@@ -1,33 +1,7 @@
 <?php 
 include('./product_data.php');
 
-if(isset($_COOKIE["Cart_products"])){ 
-
-    $cartProducts = json_decode($_COOKIE["Cart_products"], true);   
-    $cart_products_keys = array_keys($cartProducts);
-    $total_item = 0;
-    for($i=0; $i<sizeof($cart_products_keys); $i++){
-    $total_item += $cartProducts[$cart_products_keys[$i]];
-    
-}
-
-}
-
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PriKart</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-</head>
 
 <header>
 <div class="main-navbar shadow-sm sticky-top">
@@ -60,7 +34,7 @@ if(!isset($_COOKIE["Cart_products"])){
     
 }
 else{
-    echo $total_item;
+    echo sizeof( json_decode($_COOKIE["Cart_products"]));
 }
 
 ?>)
@@ -86,4 +60,3 @@ else{
 
     </div>
     </header>
-    <body>
