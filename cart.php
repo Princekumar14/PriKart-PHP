@@ -4,41 +4,61 @@ include('./product_data.php');
 // echo sizeof($cartProducts);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
-  $productID = $_POST['product_id'];
+ 
   // if (isset($_POST['product_id']) && isset($_POST['remove_product_form'])) {
 
   // }
+//   && isset($_POST['selected_qty'])
+
+  if ( isset($_POST['updated_product_id']) ) {
+    $cartProducts = json_decode($_COOKIE["Cart_products"], true);
+    $updated_ProductID = $_POST['updated_product_id'];
+    $productQTY = $_POST['selected_qty'];
+    echo $productQTY;
+    $cartProducts[$updated_ProductID] = $productQTY;
+    setcookie("Cart_products", json_encode($cartProducts), time()+86400 , "/"); 
+    header("Location: cart.php");   
   
-  // if (isset($_POST['selected_qty']) && isset($_POST['update_QTY_form'])) {
-  //   $cartProducts = json_decode($_COOKIE["Cart_products"], true);
-  //   $updtaed_ProductID = $_POST['updated_product_id'];
-  //   $productQTY = $_POST['selected_qty'];
-  //   $cartProducts[$updtaed_ProductID] = $productQTY;
-  //   setcookie($cookieName, json_encode($cartProducts), time()+86400 , "/"); 
-  
-  // }
+  }
   
 
-  if(isset($_COOKIE["Cart_products"])){ 
-
+  if(isset($_COOKIE["Cart_products"]) && isset($_POST['product_id'])){ 
+    $productID = $_POST['product_id'];
   $cartProducts = json_decode($_COOKIE["Cart_products"], true);
 
   $cart_products_keys = array_keys($cartProducts);
   
-  for($i=0; $i<sizeof($cart_products_keys); $i++){
-    if($cart_products_keys[$i] != $productID ){
-      $productsAfterRemoving[$cart_products_keys[$i]] = $cartProducts[$cart_products_keys[$i]];
+//   for($i=0; $i<sizeof($cart_products_keys); $i++){
+//     if($cart_products_keys[$i] != $productID ){
+//       $productsAfterRemoving[$cart_products_keys[$i]] = $cartProducts[$cart_products_keys[$i]];
       
-      setcookie("Cart_products", json_encode($productsAfterRemoving), time()+86400 , "/"); 
+//       setcookie("Cart_products", json_encode($productsAfterRemoving), time()+86400 , "/"); 
+
       
-    }
-    else{
-          if( sizeof($cartProducts) == 1 ){
-            setcookie("Cart_products", "", time()+86400 , "/");
-          }
-    }
-    
+//     }
+//     else{
+//           if( sizeof($cartProducts) == 1 ){
+//             setcookie("Cart_products", "", time()+86400 , "/");
+//           }
+//     }
+//     header("Location: cart.php");
+//   }
+
+
+
+  if(array_key_exists($productID, $cartProducts)){
+    if( sizeof($cartProducts) == 1 ){
+        setcookie("Cart_products", "", time()+86400 , "/");
+      }else{
+          unset($cartProducts[$productID]);
+          setcookie("Cart_products", json_encode($cartProducts), time()+86400 , "/");
+
+      }
+      header("Location: cart.php");
   }
+
+
+
   }
 
 }
@@ -82,13 +102,13 @@ if(isset($_COOKIE["Cart_products"])){
                                     <div class="d-flex">
                                         <!-- <input type="number" class="form-control" id="productQuantity"> -->
                                         <input type="hidden" value="<?php echo $cart_products_keys[$i];?>"
-                                            name="product_id">
+                                            name="updated_product_id">
                                         <input type="text" maxlength="3" class="form-control me-4 product_qty"
                                             name="selected_qty" style="width: 80px;"
                                             value="<?php echo $cartProducts[$cart_products_keys[$i]] ?>">
                                         <button type="submit"
                                             class="btn btn-light border text-danger icon-hover-danger update_QTY_Button"
-                                            style="display:none;">Update</button>
+                                            style="display:;">Update</button>
                                         <!-- <select style="width: 100px;" class="form-select me-4">
                                                   <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -97,7 +117,7 @@ if(isset($_COOKIE["Cart_products"])){
                                             </select> -->
                                     </div>
                                 </form>
-                                <div class="product_fares ms-5">
+                                <div class="product_fares ms-3">
                                     <text
                                         class="h6">$<?php  echo $products[$cart_products_keys[$i]]['price']; ?>.00</text>
                                     <br />
@@ -143,3 +163,6 @@ if(isset($_COOKIE["Cart_products"])){
         </div>
     </div>
 </section>
+
+
+<?php include_once 'footer.php';?>
